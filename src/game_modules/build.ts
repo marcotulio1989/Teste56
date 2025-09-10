@@ -4,7 +4,8 @@ import * as math from '../generic_modules/math';
 import * as util from '../generic_modules/utility';
 import { config } from './config';
 import type { Segment } from './mapgen';
-import type { Quadtree } from 'quadtree-js';
+// TODO: Update to use correct simple-quadtree type
+// import type { Quadtree } from 'quadtree-js';
 
 export enum BuildingType {
     RESIDENTIAL = "residential",
@@ -77,7 +78,7 @@ export const buildingFactory = {
         return building;
     },
 
-    aroundSegment(buildingTemplate: () => Building, segment: Segment, count: number, radius: number, quadtree: Quadtree): Building[] {
+    aroundSegment(buildingTemplate: () => Building, segment: Segment, count: number, radius: number, quadtree: any): Building[] {
         const buildings: Building[] = [];
         for (let i = 0; i < count; i++) {
             const randomAngle = Math.random() * 360;

@@ -10,24 +10,25 @@ import { Segment, MapGenerationResult } from '../game_modules/mapgen';
 import { MapActions } from '../actions/MapActions';
 import MapStore from '../stores/MapStore';
 import type { Point } from '../generic_modules/math';
-import type { Quadtree } from 'quadtree-js';
+// TODO: Fix quadtree type after updating imports in other files
+// import type { Quadtree } from 'quadtree-js';
 
 const GameCanvas: React.FC = () => {
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const pixiRenderer = useRef<PIXI.Renderer | null>(null);
-    const stage = useRef<PIXI.Stage | null>(null);
-    const zoomContainer = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const drawables = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const dynamicDrawables = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const heatmaps = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const debugDrawables = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const debugSegments = useRef<PIXI.DisplayObjectContainer | null>(null);
-    const debugMapData = useRef<PIXI.DisplayObjectContainer | null>(null);
+    const stage = useRef<PIXI.Container | null>(null);
+    const zoomContainer = useRef<PIXI.Container | null>(null);
+    const drawables = useRef<PIXI.Container | null>(null);
+    const dynamicDrawables = useRef<PIXI.Container | null>(null);
+    const heatmaps = useRef<PIXI.Container | null>(null);
+    const debugDrawables = useRef<PIXI.Container | null>(null);
+    const debugSegments = useRef<PIXI.Container | null>(null);
+    const debugMapData = useRef<PIXI.Container | null>(null);
     
     // Mutable state that doesn't trigger re-renders
     const state = useRef({
         segments: [] as Segment[],
-        qTree: null as Quadtree | null,
+        qTree: null as any | null,
         heatmap: null as MapGenerationResult['heatmap'] | null,
         initialised: false,
         dt: 0,
@@ -76,7 +77,7 @@ const GameCanvas: React.FC = () => {
 
         state.segments = segments;
         state.qTree = qTree;
-        state.heatmap = heatmap;
+        state.heatmap = heatmap || null;
         
         debugData.snaps?.forEach((point: Point) => {
             const g = new PIXI.Graphics().beginFill(0x00FF00).drawCircle(point.x, point.y, 20).endFill();
@@ -144,22 +145,23 @@ const GameCanvas: React.FC = () => {
         };
 
         const { offsetWidth, offsetHeight } = canvasContainerRef.current!;
-        pixiRenderer.current = PIXI.autoDetectRenderer({
+        pixiRenderer.current = new PIXI.Renderer({
             width: offsetWidth * window.devicePixelRatio,
             height: offsetHeight * window.devicePixelRatio,
             view: canvasEl,
             antialias: true,
-            transparent: false
+            backgroundAlpha: 1,
+            background: 0x3D7228
         });
 
-        stage.current = new PIXI.Stage(0x3D7228);
-        heatmaps.current = new PIXI.DisplayObjectContainer();
-        debugDrawables.current = new PIXI.DisplayObjectContainer();
-        debugSegments.current = new PIXI.DisplayObjectContainer();
-        debugMapData.current = new PIXI.DisplayObjectContainer();
-        zoomContainer.current = new PIXI.DisplayObjectContainer();
-        drawables.current = new PIXI.DisplayObjectContainer();
-        dynamicDrawables.current = new PIXI.DisplayObjectContainer();
+        stage.current = new PIXI.Container();
+        heatmaps.current = new PIXI.Container();
+        debugDrawables.current = new PIXI.Container();
+        debugSegments.current = new PIXI.Container();
+        debugMapData.current = new PIXI.Container();
+        zoomContainer.current = new PIXI.Container();
+        drawables.current = new PIXI.Container();
+        dynamicDrawables.current = new PIXI.Container();
 
         stage.current.addChild(heatmaps.current);
         debugDrawables.current.addChild(debugSegments.current);

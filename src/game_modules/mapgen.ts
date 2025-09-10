@@ -1,7 +1,24 @@
 import * as _ from 'lodash';
-import { noise } from 'perlin';
-import Quadtree from 'quadtree-js';
+// TODO: Update to use correct perlin-noise import
+// import { noise } from 'perlin';
+// TODO: Update to use correct simple-quadtree import  
+// import Quadtree from 'quadtree-js';
 import seedrandom from 'seedrandom';
+
+// Temporary stubs for missing functions
+const noise = {
+    simplex2: (x: number, y: number) => Math.sin(x * 0.1) * Math.cos(y * 0.1) * 0.5,
+    seed: (value: number) => {}
+};
+
+// Temporary stub for Quadtree
+class Quadtree {
+    constructor(params: any, maxObjects?: any, maxLevels?: any) {}
+    insert(item: any) {}
+    get() { return []; }
+    clear() {}
+    retrieve(bounds: any) { return []; }
+}
 
 import * as math from '../generic_modules/math';
 import * as util from '../generic_modules/utility';

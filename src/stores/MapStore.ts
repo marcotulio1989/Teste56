@@ -2,13 +2,14 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import { ActionTypes, Payload } from '../dispatcher/constants';
 import * as mapgen from '../game_modules/mapgen';
-import type { Quadtree } from 'quadtree-js';
+// TODO: Update to use correct simple-quadtree type
+// import type { Quadtree } from 'quadtree-js';
 
 const CHANGE_EVENT = 'change';
 
 let _segments: mapgen.Segment[] = [];
 const _segmentsById: { [id: number]: mapgen.Segment } = {};
-let _qTree: Quadtree | undefined = undefined;
+let _qTree: any | undefined = undefined;
 let _heatmap: typeof mapgen.heatmap | undefined = undefined;
 let _debugData: any | undefined = undefined;
 let _targetZoom = 0.05 * window.devicePixelRatio;
@@ -22,7 +23,7 @@ class MapStore extends EventEmitter {
         return _segments;
     }
 
-    getQTree(): Quadtree | undefined {
+    getQTree(): any | undefined {
         return _qTree;
     }
 
